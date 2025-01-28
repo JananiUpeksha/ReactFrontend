@@ -21,10 +21,9 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import DashboardPage from '../../pages/DashboardPage.tsx';
 import FlowerPage from "../../pages/FlowerPage.tsx";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import CustomerPage from "../../pages/CustomerPage.tsx";
 import PlaceOrderPage from "../../pages/PlaceOrderPage.tsx";
-import b1 from './assets/b1.jpg';
 
 const drawerWidth = 230;
 
@@ -46,7 +45,7 @@ export default function HoverableSidebar() {
         <Box sx={{
             display: 'flex',
             minHeight: '100vh',
-            backgroundImage: 'url(/b1.jpg)',
+            backgroundImage: 'url(/background.jpg)', // Set your background image path
             backgroundSize: 'cover', // Ensure the image covers the entire background
             backgroundPosition: 'center', // Center the image
             backgroundRepeat: 'no-repeat', // Prevent repeating the image
@@ -62,8 +61,8 @@ export default function HoverableSidebar() {
                     [`& .MuiDrawer-paper`]: {
                         width: drawerWidth,
                         boxSizing: 'border-box',
-                        color: '#003366', // Dark blue for text color
-                        backgroundColor: '#d0e9f5', // Light blue for background
+                        color: 'black',
+                        backgroundColor: '#bda6a6',
                         opacity: 0.9,
                         boxShadow: '0px 4px 10px rgba(0,0,0,0.2)',
                         borderRadius: '16px',
@@ -78,14 +77,14 @@ export default function HoverableSidebar() {
                 }}
             >
                 <Toolbar />
-                <Box sx={{ textAlign: 'center', mt: 0 }}>
+                <Box sx={{textAlign: 'center', mt: 0}}>
                     <Typography
                         variant="h6"
                         sx={{
-                            color: '#003366', // Dark blue color
+                            color: '#432e32', // Custom color
                             fontFamily: 'Fira Code, monospace',
-                            fontSize: '26px',
-                            fontWeight: 'bold',
+                            fontSize: '26px', // Custom font size
+                            fontWeight: 'bold', // Custom font weight
                             marginBottom: '0',
                         }}
                     >
@@ -95,25 +94,26 @@ export default function HoverableSidebar() {
                     <img
                         src="/logo.png"
                         alt="Green Shadow Logo"
-                        style={{ width: '150px', height: 'auto', marginTop: '0', marginLeft: '40px' }} // Adjust size and spacing
+                        style={{width: '150px', height: 'auto', marginTop: '0', marginLeft: '40px'}} // Adjust size and spacing
                     />
 
                     <List>
                         {[
-                            { text: 'Dashboard', icon: <DashboardIcon />, to: '/' },
-                            { text: 'Flowers', icon: <LocalFloristIcon />, to: '/flower' },
-                            { text: 'Customers', icon: <GroupIcon />, to: '/customer' },
-                            { text: 'Place Order', icon: <ShoppingCartIcon />, to: '/placeOrder' },
-                            { text: 'Order Details', icon: <ReceiptLongIcon />, to: '/orderDetails' },
-                            { text: 'Payment', icon: <PaymentIcon />, to: '/payment' },
-                            { text: 'Log Out', icon: <ExitToAppIcon />, to: '/logout' },
+                            { text: 'Dashboard', icon: <DashboardIcon />, to: '/' }, // DashboardPage Icon
+                            { text: 'Flowers', icon: <LocalFloristIcon />, to: '/flower' }, // Flower Icon
+                            { text: 'Customers', icon: <GroupIcon />, to: '/customer' }, // Group Icon (Customer Management)
+                            { text: 'Place Order', icon: <ShoppingCartIcon />, to: '/placeOrder' }, // Shopping Cart Icon for Orders
+                            { text: 'Order Details', icon: <ReceiptLongIcon />, to: '/orderDetails' }, // Receipt Icon for Order Details
+                            { text: 'Payment', icon: <PaymentIcon />, to: '/payment' }, // Payment Icon for Transactions
+                            { text: 'Log Out', icon: <ExitToAppIcon />, to: '/logout' }, // Log Out Icon
                         ].map((item) => (
                             <Tooltip title={item.text} placement="right" key={item.text}>
                                 <ListItem
                                     disablePadding
                                     sx={{
-                                        marginBottom: '5px',
-                                        border: '2px solid #7da6d5', // Blue border
+                                        marginBottom: '5px', // Add vertical margin between list items
+                                        border: '2px solid #674b50', // Add border
+                                        // borderRadius: '8px', // Round the corners
                                     }}
                                 >
                                     <ListItemButton
@@ -121,36 +121,36 @@ export default function HoverableSidebar() {
                                         to={item.to}
                                         sx={{
                                             '&:hover': {
-                                                backgroundColor: 'rgba(0, 102, 204, 0.8)', // Blue hover effect
+                                                backgroundColor: 'rgba(117,90,95,0.83)',
                                                 transition: '0.3s',
                                                 '& .MuiListItemText-primary': {
-                                                    color: '#fff', // White text on hover
+                                                    color: '#ecd9d9', // Change the text color
                                                 },
                                                 '& .MuiListItemIcon-root': {
-                                                    color: '#fff', // White icon on hover
+                                                    color: '#ecd9d9', // Change the icon color
                                                 },
                                             },
                                             ...(location.pathname === item.to && {
-                                                backgroundColor: 'rgba(0, 102, 204, 0.8)',
+                                                backgroundColor: 'rgba(117,90,95,0.83)',
                                                 fontWeight: 'bold',
                                                 '& .MuiListItemText-primary': {
-                                                    color: '#fff',
+                                                    color: '#ecd9d9',
                                                 },
                                                 '& .MuiListItemIcon-root': {
-                                                    color: '#fff',
+                                                    color: '#ecd9d9',
                                                 },
                                             }),
                                         }}
                                     >
-                                        <ListItemIcon sx={{ color: '#003366' }}>{item.icon}</ListItemIcon>
+                                        <ListItemIcon sx={{ color: '#432e32' }}>{item.icon}</ListItemIcon>
                                         <ListItemText
                                             primary={item.text}
                                             primaryTypographyProps={{
                                                 sx: {
-                                                    color: '#003366', // Dark blue text
-                                                    fontFamily: 'Montserrat, sans-serif',
-                                                    fontSize: '16px',
-                                                    fontWeight: 'bold',
+                                                    color: '#432e32', // Custom text color
+                                                    fontFamily: 'Montserrat, sans-serif', // Sleek and geometric
+                                                    fontSize: '16px', // Custom font size
+                                                    fontWeight: 'bold', // Custom font weight
                                                 },
                                             }}
                                         />
@@ -162,19 +162,21 @@ export default function HoverableSidebar() {
                 </Box>
             </Drawer>
 
-            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#d0e9f5', opacity: 0.9, borderRadius: '16px', marginLeft: '20px' }}>
-                {/* Upper box for the page title */}
+            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#bda6a6',opacity: 0.9, borderRadius: '16px', marginLeft: '20px' }}>
+
                 <Box
-                    sx={{ padding: '16px', backgroundColor: '#336699', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                >
-                    <Typography variant="h6" sx={{ color: '#ffffff', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
+                    sx={{ padding: '16px', backgroundColor: '#674b50', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+
+                    <Typography variant="h6" sx={{ color: '#ecd9d9', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
                         {currentTime.toLocaleDateString()}  -  {currentTime.toLocaleTimeString()}
                     </Typography>
 
+
                     <Typography
                         variant="h5"
-                        sx={{ color: '#ffffff', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif', textAlign: 'right' }}
+                        sx={{ color: '#ecd9d9', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif', textAlign: 'right' }}
                     >
+
                         {(() => {
                             switch (location.pathname) {
                                 case '/':
@@ -198,8 +200,8 @@ export default function HoverableSidebar() {
                     </Typography>
                 </Box>
 
-                {/* Lower box for the page content */}
-                <Box sx={{ padding: '16px', backgroundColor: '#336699', borderRadius: '8px', height: '87%' }}>
+
+                <Box sx={{ padding: '16px', backgroundColor: '#674b50', borderRadius: '8px', height: '87%' }}>
                     <Routes>
                         <Route path="/" element={<DashboardPage />} />
                         <Route path="/flower" element={<FlowerPage />} />
@@ -211,6 +213,7 @@ export default function HoverableSidebar() {
                 </Box>
 
             </Box>
+
 
         </Box>
     );
