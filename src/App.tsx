@@ -4,6 +4,7 @@ import RootLayout from "./components/sidebar/RootLayout";
 import LoginPage from "./pages/LoginPage";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
+import SignUpPage from "./pages/SignupPage.tsx";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication state
@@ -17,6 +18,11 @@ function App() {
                 <Route
                     path="/login"
                     element={<LoginPage onLogin={() => setIsAuthenticated(true)} />} // Pass onLogin callback
+
+                />
+                <Route
+                    path="/signup"
+                    element={<SignUpPage />} // Add route for sign-up page
                 />
 
                 {/* Protected Routes */}
