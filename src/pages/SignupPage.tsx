@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+/*
+
 import { useNavigate } from "react-router-dom";
+import {useState} from "react";
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -12,18 +14,25 @@ function SignUpPage() {
         if (username && email && password) {
             // Perform the sign-up logic here (e.g., API call to create a new user)
             console.log("Sign-up successful:", { username, email, password });
-            navigate("/"); // Redirect to the dashboard or login page
+            navigate("/"); // Redirect to the dashboard
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div
+            className="flex justify-center items-center min-h-screen"
+            style={{ backgroundColor: "#e3f2fd" }}
+        >
             <div
-                className="flex justify-center items-center bg-green-500 px-6 py-12 rounded-lg"
-                style={{ width: "1000px", height: "700px" }}
+                className="flex justify-center items-center px-6 py-12 rounded-lg shadow-xl"
+                style={{
+                    width: "1000px",
+                    height: "700px",
+                    backgroundColor: "#bbdefb",
+                }}
             >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full h-full">
-                    {/* Form Section */}
+                    {/!* Form Section *!/}
                     <div className="flex flex-col justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                         <div className="flex items-center justify-center space-x-2 mt-8">
                             <h1 className="text-center text-3xl font-extrabold tracking-tight text-gray-900">
@@ -103,17 +112,16 @@ function SignUpPage() {
                                     >
                                         Sign Up
                                     </button>
-
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    {/* Image Section */}
-                    <div className="flex justify-center items-center h-full rounded-lg overflow-hidden">
+                    {/!* Image Section *!/}
+                    <div className="flex justify-center items-center h-full rounded-lg overflow-hidden shadow-lg">
                         <img
                             className="w-full h-full object-cover"
-                            src="/flower3.jpg"
+                            src="/signup.jpg"
                             alt="Sign Up"
                         />
                     </div>
@@ -122,5 +130,18 @@ function SignUpPage() {
         </div>
     );
 }
+
+export default SignUpPage;
+*/
+
+import SignUpFormComponent from "../components/signup/SignupForm.tsx";
+
+const SignUpPage = () => {
+    return (
+        <div>
+            <SignUpFormComponent />
+        </div>
+    );
+};
 
 export default SignUpPage;

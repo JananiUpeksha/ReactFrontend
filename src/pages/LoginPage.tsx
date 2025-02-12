@@ -1,53 +1,7 @@
 /*
-import { useNavigate } from 'react-router-dom';
 
-interface LoginPageProps {
-    onLogin: () => void; // Callback function to handle login
-}
-
-function LoginPage({ onLogin }: LoginPageProps) {
-    const navigate = useNavigate();
-
-    const handleSignIn = (event: React.FormEvent) => {
-        event.preventDefault();
-        // Perform any login logic here (e.g., validation, API calls)
-        // After successful login, call onLogin to update the state and navigate
-        onLogin(); // Update authentication state
-        navigate('/'); // Navigate to the dashboard
-    };
-
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f5f5f5' }}>
-            <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0,0,0,0.1)' }}>
-                <h1 style={{ color: '#432e32', textAlign: 'center' }}>Login</h1>
-                <form onSubmit={handleSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <input
-                        type="text"
-                        placeholder="Username"
-                        style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        style={{ padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
-                        required
-                    />
-                    <button
-                        type="submit"
-                        style={{ padding: '10px', backgroundColor: '#674b50', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-                    >
-                        Sign In
-                    </button>
-                </form>
-            </div>
-        </div>
-    );
-}
-
-export default LoginPage;*/
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {useState} from "react";
 
 interface LoginPageProps {
     onLogin?: () => void; // Optional callback for login handling
@@ -69,13 +23,16 @@ function LoginPage({ onLogin }: LoginPageProps) {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div
+            className="flex justify-center items-center min-h-screen"
+            style={{ backgroundColor: "#e3f2fd" }}
+        >
             <div
-                className="flex justify-center items-center bg-green-500 px-6 py-12 rounded-lg"
-                style={{ width: "1000px", height: "700px" }}
+                className="flex justify-center items-center px-6 py-12 rounded-lg"
+                style={{ backgroundColor: "#bbdefb", width: "1000px", height: "700px" }}
             >
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full h-full">
-                    {/* Form Section */}
+                    {/!* Form Section *!/}
                     <div className="flex flex-col justify-center items-center sm:mx-auto sm:w-full sm:max-w-sm">
                         <div className="flex items-center justify-center space-x-2 mt-8">
                             <h1 className="text-center text-3xl font-extrabold tracking-tight text-gray-900">
@@ -150,11 +107,11 @@ function LoginPage({ onLogin }: LoginPageProps) {
                         </div>
                     </div>
 
-                    {/* Image Section */}
+                    {/!* Image Section *!/}
                     <div className="flex justify-center items-center h-full rounded-lg overflow-hidden">
                         <img
                             className="w-full h-full object-cover"
-                            src="/flower3.jpg"
+                            src="/login.jpg"
                             alt="Login"
                         />
                     </div>
@@ -165,4 +122,19 @@ function LoginPage({ onLogin }: LoginPageProps) {
 }
 
 export default LoginPage;
+*/
 
+
+
+
+import LoginFormComponent from "../components/login/loginForm.tsx";
+
+const LoginPage = () => {
+    return (
+        <div>
+            <LoginFormComponent />
+        </div>
+    );
+};
+
+export default LoginPage;
