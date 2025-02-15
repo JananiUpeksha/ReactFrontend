@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import {forwardRef, useImperativeHandle, useRef, useState} from "react";
-import { addFlower, updateFlower } from "../../reducers/FlowerSlice.ts";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { saveFlower, updateFlower } from "../../reducers/FlowerSlice.ts";
 import { Flower } from "../../models/flower.ts";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
+import { AppDispatch } from "../../store/Store.ts";
 
 interface RootState {
     flower: Flower[];
@@ -10,15 +11,15 @@ interface RootState {
 
 const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => void }, ref) => {
     const flowers = useSelector((store: RootState) => store.flower);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const [flowerCode, setFlowerCode] = useState<number | undefined>();
+    const [flowerCode, setFlowerCode] = useState<number | "">(""); // Default as empty string
     const [flowerName, setFlowerName] = useState<string>("");
     const [previewFlowerImage, setPreviewFlowerImage] = useState<string | null>(null);
     const [flowerSize, setFlowerSize] = useState<string>("");
     const [flowerColour, setFlowerColour] = useState<string>("");
-    const [flowerUnitPrice, setFlowerUnitPrice] = useState<number | undefined>();
-    const [flowerQtyOnHand, setFlowerQtyOnHand] = useState<number | undefined>();
+    const [flowerUnitPrice, setFlowerUnitPrice] = useState<number | "">(""); // Default as empty string
+    const [flowerQtyOnHand, setFlowerQtyOnHand] = useState<number | "">(""); // Default as empty string
 
     const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -26,19 +27,19 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
 
     useImperativeHandle(ref, () => ({
         editFlower(flower: Flower) {
-            setFlowerCode(flower.flower_code);
-            setFlowerName(flower.flower_name);
-            setFlowerColour(flower.flower_colour);
-            setFlowerSize(flower.flower_size);
-            setFlowerUnitPrice(flower.flower_unit_price);
-            setFlowerQtyOnHand(flower.flower_qty_on_hand);
+            setFlowerCode(flower.flower_code || "");
+            setFlowerName(flower.flower_name || "");
+            setFlowerColour(flower.flower_colour || "");
+            setFlowerSize(flower.flower_size || "");
+            setFlowerUnitPrice(flower.flower_unit_price || "");
+            setFlowerQtyOnHand(flower.flower_qty_on_hand || "");
             setPreviewFlowerImage(flower.flower_image || null);
             setEditMode(true);
         },
     }));
 
-    const handleFlowerOperation = (type: "ADD_FLOWER" | "UPDATE_FLOWER") => {
-        if (!flowerCode || !flowerName || !flowerSize || !flowerColour || !flowerUnitPrice || !flowerQtyOnHand) {
+    /*const handleFlowerOperation = async (type: "ADD_FLOWER" | "UPDATE_FLOWER") => {
+        if (flowerCode === "" || flowerName === "" || flowerSize === "" || flowerColour === "" || flowerUnitPrice === "" || flowerQtyOnHand === "") {
             toast.error("Please fill out all required fields.", {
                 position: "bottom-right",
                 autoClose: 2000,
@@ -46,45 +47,162 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
             return;
         }
 
-        const newFlower: Flower = {
-            flower_code: flowerCode,
-            flower_name: flowerName,
-            flower_image: previewFlowerImage || "",
-            flower_size: flowerSize,
-            flower_colour: flowerColour,
-            flower_unit_price: flowerUnitPrice,
-            flower_qty_on_hand: flowerQtyOnHand,
-        };
+        const formData = new FormData();
+        formData.append("flower_code", flowerCode.toString());
+        formData.append("flower_name", flowerName);
+        formData.append("flower_size", flowerSize);
+        formData.append("flower_colour", flowerColour);
+        formData.append("flower_unit_price", flowerUnitPrice.toString());
+        formData.append("flower_qty_on_hand", flowerQtyOnHand.toString());
+
+        if (fileInput1Ref.current?.files?.[0]) {
+            formData.append("flower_image", fileInput1Ref.current.files[0]);
+        }
 
         switch (type) {
             case "ADD_FLOWER":
-                dispatch(addFlower(newFlower));
+                await dispatch(saveFlower(formData)).unwrap();
                 toast.success("Flower saved successfully!", {
                     position: "bottom-right",
                     autoClose: 2000,
                 });
                 clearForm();
-                onCloseModal(); // Close the modal after saving
+                onCloseModal();
                 break;
             case "UPDATE_FLOWER":
-                dispatch(updateFlower(newFlower));
+                await dispatch(updateFlower(formData)).unwrap();
                 toast.success("Flower updated successfully!", {
                     position: "bottom-right",
                     autoClose: 2000,
                 });
                 clearForm();
                 setEditMode(false);
-                onCloseModal(); // Close the modal after saving
+                onCloseModal();
                 break;
             default:
                 break;
         }
     };
+*/
+    /*const handleFlowerOperation = async (type: "ADD_FLOWER" | "UPDATE_FLOWER") => {
+        if (flowerCode === "" || flowerName === "" || flowerSize === "" || flowerColour === "" || flowerUnitPrice === "" || flowerQtyOnHand === "") {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
 
-    const handleImageChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        setPreview: React.Dispatch<React.SetStateAction<string | null>>
-    ) => {
+        const formData = new FormData();
+        formData.append("flower_code", flowerCode.toString());
+        formData.append("flower_name", flowerName);
+        formData.append("flower_size", flowerSize);
+        formData.append("flower_colour", flowerColour);
+        formData.append("flower_unit_price", flowerUnitPrice.toString());
+        formData.append("flower_qty_on_hand", flowerQtyOnHand.toString());
+
+        if (fileInput1Ref.current?.files?.[0]) {
+            formData.append("flower_image", fileInput1Ref.current.files[0]);
+        }
+
+        switch (type) {
+            case "ADD_FLOWER":
+                await dispatch(saveFlower(formData)).unwrap();
+                toast.success("Flower saved successfully!", {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                });
+                clearForm();
+                onCloseModal();
+                break;
+            case "UPDATE_FLOWER":
+                await dispatch(updateFlower({ flowerCode, formData })).unwrap();
+                toast.success("Flower updated successfully!", {
+                    position: "bottom-right",
+                    autoClose: 2000,
+                });
+                clearForm();
+                setEditMode(false);
+                onCloseModal();
+                break;
+            default:
+                break;
+        }
+    };*/
+    const handleFlowerOperation = async (type: "ADD_FLOWER" | "UPDATE_FLOWER") => {
+        // Validate required fields (excluding flower_code for ADD_FLOWER)
+        if (
+            flowerName === "" ||
+            flowerSize === "" ||
+            flowerColour === "" ||
+            flowerUnitPrice === "" ||
+            flowerQtyOnHand === ""
+        ) {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        // Create FormData object
+        const formData = new FormData();
+        formData.append("flower_name", flowerName);
+        formData.append("flower_size", flowerSize);
+        formData.append("flower_colour", flowerColour);
+        formData.append("flower_unit_price", flowerUnitPrice.toString());
+        formData.append("flower_qty_on_hand", flowerQtyOnHand.toString());
+
+        // Append image if available
+        if (fileInput1Ref.current?.files?.[0]) {
+            formData.append("flower_image", fileInput1Ref.current.files[0]);
+        }
+
+        try {
+            switch (type) {
+                case "ADD_FLOWER":
+                    // For adding a flower, do not include flower_code
+                    await dispatch(saveFlower(formData)).unwrap();
+                    toast.success("Flower saved successfully!", {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                    });
+                    clearForm();
+                    onCloseModal();
+                    break;
+
+                case "UPDATE_FLOWER":
+                    // For updating a flower, include flower_code
+                    if (flowerCode === "") {
+                        toast.error("Flower code is required for updating.", {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                        });
+                        return;
+                    }
+                    formData.append("flower_code", flowerCode.toString());
+                    await dispatch(updateFlower({ flowerCode, formData })).unwrap();
+                    toast.success("Flower updated successfully!", {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                    });
+                    clearForm();
+                    setEditMode(false);
+                    onCloseModal();
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error("Error during flower operation:", error);
+            toast.error("An error occurred. Please try again.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+        }
+    };
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, setPreview: React.Dispatch<React.SetStateAction<string | null>>) => {
         const flower = e.target.files?.[0];
         if (flower) {
             setPreview(URL.createObjectURL(flower));
@@ -92,12 +210,12 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
     };
 
     const clearForm = () => {
-        setFlowerCode(undefined);
+        setFlowerCode("");
         setFlowerName("");
         setFlowerSize("");
         setFlowerColour("");
-        setFlowerUnitPrice(undefined);
-        setFlowerQtyOnHand(undefined);
+        setFlowerUnitPrice("");
+        setFlowerQtyOnHand("");
         setPreviewFlowerImage(null);
         setEditMode(false);
 
@@ -126,8 +244,8 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
             <form
                 className="mx-auto mt-0 p-3 rounded-lg border-2 border-[#432e32] shadow-lg bg-[#bda6a6]"
                 style={{
-                    width: "100%", // Adjust form width
-                    maxWidth: "600px", // Set a maximum width for responsiveness
+                    width: "100%",
+                    maxWidth: "600px",
                 }}
             >
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
@@ -138,12 +256,12 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                         <input
                             type="text"
                             id="flower_code"
-                            value={flowerCode || ""}
+                            value={flowerCode}
                             onChange={(e) => setFlowerCode(Number(e.target.value))}
                             onKeyDown={handleSearchByFlowerCode}
                             className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
                             placeholder="01"
-                            required
+                            maxLength={5}
                         />
                     </div>
                     <div>
@@ -161,6 +279,20 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                         />
                     </div>
                     <div>
+                        <label htmlFor="flower_size" className="block mb-2 text-sm font-bold text-[#432e32]">
+                            Size
+                        </label>
+                        <input
+                            type="text"
+                            id="flower_size"
+                            value={flowerSize}
+                            onChange={(e) => setFlowerSize(e.target.value)}
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Large"
+                            required
+                        />
+                    </div>
+                    <div>
                         <label htmlFor="flower_colour" className="block mb-2 text-sm font-bold text-[#432e32]">
                             Colour
                         </label>
@@ -170,95 +302,73 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                             value={flowerColour}
                             onChange={(e) => setFlowerColour(e.target.value)}
                             className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
-                            placeholder="White"
+                            placeholder="Red"
                             required
                         />
                     </div>
                     <div>
-                        <label htmlFor="flower_size" className="block mb-2 text-sm font-bold text-[#432e32]">
-                            Size
-                        </label>
-                        <select
-                            id="flower_size"
-                            className="w-full p-1 border border-[#432e32] text-md rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
-                            value={flowerSize}
-                            onChange={(e) => setFlowerSize(e.target.value)}
-                            required
-                        >
-                            <option value="" disabled>
-                                select the size
-                            </option>
-                            <option value="Small">Small</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Large">Large</option>
-                        </select>
-                    </div>
-                    <div>
                         <label htmlFor="flower_unit_price" className="block mb-2 text-sm font-bold text-[#432e32]">
-                            Unit Price
+                            Price
                         </label>
                         <input
                             type="number"
                             id="flower_unit_price"
-                            value={flowerUnitPrice}
+                            value={flowerUnitPrice || ""}
                             onChange={(e) => setFlowerUnitPrice(Number(e.target.value))}
                             className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
-                            placeholder="567.70"
+                            placeholder="10.00"
                             required
                         />
                     </div>
                     <div>
                         <label htmlFor="flower_qty_on_hand" className="block mb-2 text-sm font-bold text-[#432e32]">
-                            Qty On Hand
+                            Quantity in Hand
                         </label>
                         <input
                             type="number"
                             id="flower_qty_on_hand"
-                            value={flowerQtyOnHand}
+                            value={flowerQtyOnHand || ""}
                             onChange={(e) => setFlowerQtyOnHand(Number(e.target.value))}
                             className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
-                            placeholder="43"
+                            placeholder="100"
                             required
                         />
                     </div>
+
                     <div>
                         <label htmlFor="flower_image" className="block mb-2 text-sm font-bold text-[#432e32]">
                             Image
                         </label>
                         <input
+                            ref={fileInput1Ref}
                             type="file"
                             id="flower_image"
-                            ref={fileInput1Ref}
                             onChange={(e) => handleImageChange(e, setPreviewFlowerImage)}
-                            className="w-full p-1.5 text-xs border border-[#432e32] rounded bg-gray-100 shadow-md shadow-[#7e6868]"
                             accept="image/*"
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
                         />
                         {previewFlowerImage && (
-                            <img src={previewFlowerImage} alt="Preview" className="mt-2 h-20"/>
+                            <img
+                                src={previewFlowerImage}
+                                alt="Flower preview"
+                                className="w-16 h-16 mt-2 rounded"
+                            />
                         )}
                     </div>
                 </div>
 
-                <div className="grid gap-5 md:grid-cols-2 mx-20 mt-5 mb-3">
+                <div className="flex justify-between mt-6">
                     <button
                         type="button"
+                        className="w-[45%] py-2 px-3 text-sm font-medium text-white bg-[#007bff] rounded-md"
                         onClick={() => handleFlowerOperation(editMode ? "UPDATE_FLOWER" : "ADD_FLOWER")}
-                        className="w-full h-9 bg-yellow-600 text-black font-bold border-2 border-yellow-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
-                        style={{
-                            fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
-                            letterSpacing: "0.5px", // Slight letter spacing for elegance
-                        }}
                     >
                         {editMode ? "Update Flower" : "Add Flower"}
                     </button>
                     <button
                         type="button"
-                        onClick={() => clearForm()}
-                        className="w-full h-9 bg-pink-900 text-white font-bold border-2 border-pink-900 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
-                        style={{
-                            fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
-                            letterSpacing: "0.5px", // Slight letter spacing for elegance
-                        }}
+                        className="w-[45%] py-2 px-3 text-sm font-medium text-white bg-[#dc3545] rounded-md"
+                        onClick={clearForm}
                     >
                         Clear
                     </button>
