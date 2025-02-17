@@ -222,7 +222,7 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
         if (fileInput1Ref.current) fileInput1Ref.current.value = "";
     };
 
-    const handleSearchByFlowerCode = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    /*const handleSearchByFlowerCode = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             const foundFlower = flowers.find((flower: Flower) => flower.flower_code === flowerCode);
             if (foundFlower) {
@@ -237,7 +237,25 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                 alert("Flower not found.");
             }
         }
+    };*/
+    const handleSearchButtonClick = () => {
+        const foundFlower = flowers.find((flower: Flower) => flower.flower_code === flowerCode);
+        if (foundFlower) {
+            setFlowerName(foundFlower.flower_name);
+            setFlowerSize(foundFlower.flower_size);
+            setFlowerColour(foundFlower.flower_colour);
+            setFlowerUnitPrice(foundFlower.flower_unit_price);
+            setFlowerQtyOnHand(foundFlower.flower_qty_on_hand);
+            setPreviewFlowerImage(foundFlower.flower_image || null);
+            setEditMode(true);
+        } else {
+            toast.error("Flower not found.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+        }
     };
+
 
     return (
         <>
@@ -249,7 +267,7 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                 }}
             >
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
-                    <div>
+                    {/*<div>
                         <label htmlFor="flower_code" className="block mb-2 text-sm font-bold text-[#432e32]">
                             Code
                         </label>
@@ -263,7 +281,32 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                             placeholder="01"
                             maxLength={5}
                         />
+                    </div>*/}
+                    <div className="flex flex-col items-start gap-1">
+                        <label htmlFor="flower_code" className="block mb-1 text-sm font-bold text-[#432e32]">
+                            Code
+                        </label>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                id="flower_code"
+                                value={flowerCode}
+                                onChange={(e) => setFlowerCode(Number(e.target.value))}
+                                className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                                placeholder="01"
+                                maxLength={5}
+                            />
+                            <button
+                                type="button"
+                                onClick={handleSearchButtonClick}
+                                className="py-2 px-4 text-sm font-medium text-white bg-[#007bff] rounded-md shadow-md mt-0.5"
+                            >
+                                Search
+                            </button>
+                        </div>
                     </div>
+
+
                     <div>
                         <label htmlFor="flower_name" className="block mb-2 text-sm font-bold text-[#432e32]">
                             Name
