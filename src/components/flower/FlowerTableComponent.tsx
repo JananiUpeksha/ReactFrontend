@@ -56,7 +56,7 @@ const FlowerTableComponent = ({onEditFlower,}: { onEditFlower: (flower: Flower) 
             />
 
             {/* Table */}
-            <div className="mt-7 overflow-y-auto max-h-[420px] border-2 border-black shadow-lg sm:rounded-lg">
+            <div className="mt-7 overflow-y-auto max-h-[580px] border-2 border-black shadow-lg sm:rounded-lg">
                 <table
                     className="w-full bg-[#bda6a6] border-collapse">
                     <thead className="sticky top-0 bg-gray-100 text-gray-600 text-xs uppercase tracking-wider z-10">

@@ -552,7 +552,7 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
         }
     }));
 
-    const handleCustomerOperation = (type: "ADD_CUSTOMER" | "UPDATE_CUSTOMER") => {
+ /*   const handleCustomerOperation = (type: "ADD_CUSTOMER" | "UPDATE_CUSTOMER") => {
         // Validate required fields (excluding customerId for ADD_CUSTOMER)
         if (!customerFirstName || !customerLastName || !customerPhone || !customerEmail || !customerAddress || !gender) {
             toast.error("Please fill out all required fields.", {
@@ -604,6 +604,151 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
             default:
                 break;
         }
+    };*/
+
+
+   /* const handleCustomerOperation = (type: "ADD_CUSTOMER" | "UPDATE_CUSTOMER") => {
+        // Validate required fields (excluding customerId for ADD_CUSTOMER)
+        if (!customerFirstName || !customerLastName || !customerPhone || !customerEmail || !customerAddress || !gender) {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        // For UPDATE_CUSTOMER, ensure customerId is provided
+        if (type === "UPDATE_CUSTOMER" && !customerId) {
+            toast.error("Customer ID is required for updating.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        const newCustomer: Customer = {
+            customer_id: customerId, // This will be undefined for new customers, which is fine
+            customer_firstName: customerFirstName,
+            customer_lastName: customerLastName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail,
+            customer_address: customerAddress,
+            gender: gender,
+        };
+
+        switch (type) {
+            case "ADD_CUSTOMER":
+                dispatch(saveCustomer(newCustomer))
+                    .unwrap()
+                    .then(() => {
+                        toast.success("Customer saved successfully!", {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                        });
+                        clearForm();
+                        onCloseModal(); // Close the modal after saving
+                    })
+                    .catch((error) => {
+                        toast.error(`Failed to save customer: ${error.message}`, {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                        });
+                    });
+                break;
+            case "UPDATE_CUSTOMER":
+                if (!customerId) {
+                    toast.error("Customer ID is required for updating.", {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                    });
+                    return;
+                }
+
+                dispatch(updateCustomer({ customerId, customerData: newCustomer }))
+                    .unwrap()
+                    .then(() => {
+                        toast.success("Customer updated successfully!", {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                        });
+                        clearForm();
+                        setEditMode(false);
+                        onCloseModal(); // Close the modal after saving
+                    })
+                    .catch((error) => {
+                        toast.error(`Failed to update customer: ${error.message}`, {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                        });
+                    });
+                break;
+            default:
+                break;
+        }
+    };
+*/
+    const handleCustomerOperation = (type: "ADD_CUSTOMER" | "UPDATE_CUSTOMER") => {
+        // Validate required fields (excluding customerId for ADD_CUSTOMER)
+        if (!customerFirstName || !customerLastName || !customerPhone || !customerEmail || !customerAddress || !gender) {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        // For UPDATE_CUSTOMER, ensure customerId is provided
+        if (type === "UPDATE_CUSTOMER" && !customerId) {
+            toast.error("Customer ID is required for updating.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        const newCustomer: Customer = {
+            customer_id: customerId || undefined, // Ensure it's undefined for new customers
+            customer_firstName: customerFirstName,
+            customer_lastName: customerLastName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail,
+            customer_address: customerAddress,
+            gender: gender,
+        };
+
+        const operation = type === "ADD_CUSTOMER"
+            ? dispatch(saveCustomer(newCustomer))
+            : dispatch(updateCustomer({ customerId, customerData: newCustomer }));
+
+        operation
+            .unwrap()
+            .then(() => {
+                toast.success(
+                    type === "ADD_CUSTOMER"
+                        ? "Customer saved successfully!"
+                        : "Customer updated successfully!",
+                    {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                    }
+                );
+                clearForm();
+                if (type === "UPDATE_CUSTOMER") {
+                    setEditMode(false);
+                }
+                onCloseModal(); // Close the modal after saving/updating
+            })
+            .catch((error) => {
+                toast.error(
+                    type === "ADD_CUSTOMER"
+                        ? `Failed to save customer: ${error.message}`
+                        : `Failed to update customer: ${error.message}`,
+                    {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                    }
+                );
+            });
     };
 
     const clearForm = () => {
@@ -644,7 +789,7 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                 }}
             >
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
-                    <div>
+                    {/* <div>
                         <label htmlFor="customer_id" className="block mb-2 text-sm font-bold text-[#432e32]">
                             Id
                         </label>
@@ -658,7 +803,34 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                             placeholder="01"
                             disabled={editMode} // Disable ID input in edit mode
                         />
+                    </div>*/}
+                    <div className="grid grid-cols-3 gap-2 items-end">
+                        <div className="col-span-2">
+                            <label htmlFor="customer_id" className="block mb-2 text-sm font-bold text-[#432e32]">
+                                Id
+                            </label>
+                            <input
+                                type="text"
+                                id="customer_id"
+                                value={customerId || ""}
+                                onChange={(e) => setCustomerId(Number(e.target.value))}
+                                onKeyDown={handleSearchByCustomerId} // Search when pressing Enter
+                                className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                                placeholder="01"
+                                disabled={editMode} // Disable ID input in edit mode
+                            />
+                        </div>
+                        <div>
+                            <button
+                                type="button"
+                                onClick={() => handleSearchByCustomerId({key: "Enter"} as React.KeyboardEvent<HTMLInputElement>)} // Trigger search on click
+                                className="w-full h-9 bg-blue-600 text-white font-bold border-2 border-blue-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            >
+                                Search
+                            </button>
+                        </div>
                     </div>
+
                     <div>
                         <label htmlFor="customer_firstName" className="block mb-2 text-sm font-bold text-[#432e32]">
                             First Name
@@ -741,7 +913,6 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                             required
                         >
                             <option value="" disabled>
-                                select the gender
                             </option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>

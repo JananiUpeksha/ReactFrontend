@@ -221,12 +221,36 @@ export const updateCustomer = createAsyncThunk(
         }
     }
 );*/
-export const updateCustomer = createAsyncThunk(
+/*export const updateCustomer = createAsyncThunk(
     "customer/updateCustomer",
     async ({ customerId, customerData }: { customerId: number, customerData: Customer }, { rejectWithValue }) => {
         if (!customerId) {
             console.error("Invalid customer ID:", customerId);
             return rejectWithValue("Customer ID is missing");
+        }
+
+        try {
+            console.log("Customer data for update:", customerData);
+            const response = await api.put(`/customer/update/${customerId}`, {
+                ...customerData,
+                contact: customerData?.customer_phone || "",
+            });
+
+            if (response.status !== 200) {
+                throw new Error("Failed to update customer");
+            }
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : error.message);
+        }
+    }
+);*/
+export const updateCustomer = createAsyncThunk(
+    "customer/updateCustomer",
+    async ({ customerId, customerData }: { customerId: number, customerData: Customer }, { rejectWithValue }) => {
+        if (!customerId) {
+            console.error("Invalid customer ID:", customerId);
+            return rejectWithValue("Customer ID is missing or invalid");
         }
 
         try {
