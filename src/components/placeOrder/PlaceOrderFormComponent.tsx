@@ -1,19 +1,55 @@
 import { useState, useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch} from "../../store/Store.ts";
+import {Flower} from "../../models/flower.ts";
+import {Customer} from "../../models/customer.ts";
+import {viewCustomers} from "../../reducers/CustomerSlice.ts";
+import {viewFlowers} from "../../reducers/FlowerSlice.ts";
+import {CartItems} from "../../models/addToCart.ts";
+import {toast} from "react-toastify";
+import {OrderDetails} from "../../models/orderDetails.ts";
+import {saveOrder} from "../../reducers/OrderSlice.ts";
+import {Order} from "../../models/order.ts";
+import PlaceOrderPage from "../../pages/PlaceOrderPage.tsx";
 
-const PlaceOrderFormComponent = ({ onAddOrder }: { onAddOrder: (order: any) => void }) => {
+interface RootState {
+    flower: Flower[]; // Adjust type based on your Flower model
+    customer: Customer[]; // Adjust type based on your Customer model
+    order: Order[];
+}
+
+const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}: {
+    onAddItem: (item: CartItems) => void;
+    subtotal: number;
+    cartItems: CartItems[];
+    setCartItems: React.Dispatch<React.SetStateAction<CartItems[]>>;
+}) => {
+
+    const dispatch = useDispatch<AppDispatch>();
+    const flowers = useSelector((state: RootState) => state.flower); // Get flowers from Redux store
+    const customers = useSelector((state: RootState) => state.customer); // Get customers from Redux store
+    const orders = useSelector((state: RootState) => state.order);
+
     const [orderId, setOrderId] = useState("");
     const [date, setDate] = useState("");
     const [customerName, setCustomerName] = useState("");
     const [customerPhone, setCustomerPhone] = useState("");
-    const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
+    const [itemCode, setItemCode] = useState<number | undefined>();
     const [itemName, setItemName] = useState("");
+    const [unitPrice, setUnitPrice] = useState<number | undefined>();
     const [qtyOnHand, setQtyOnHand] = useState<number | undefined>();
+    const [wrappingCharges, setWrappingCharges] = useState<number | undefined>();
+    const [decorationCharges, setDecorationCharges] = useState<number | undefined>();
+    const [paidAmount, setPaidAmount] = useState<number | undefined>();
+    const [balance, setBalance] = useState<number | undefined>();
+    const [totalAmount, setTotalAmount] = useState<number | undefined>();
+    const [discount, setDiscount] = useState("");
     const [qty, setQty] = useState<number | undefined>();
-    const [customerNamesList] = useState(["John Doe", "Jane Smith", "Alice Brown"]); // Example names list
-    const [itemNamesList] = useState(["Rose", "Tulip", "Lily"]); // Example item names list
-    const [orderTotal, setOrderTotal] = useState<number | undefined>(0);
+
+    // Calculate the computed subtotal by adding additional charges to the table total
+    const computedSubtotal = subtotal + (wrappingCharges || 0) + (decorationCharges || 0);
 
     useEffect(() => {
         // Auto-generate the date
@@ -21,189 +57,382 @@ const PlaceOrderFormComponent = ({ onAddOrder }: { onAddOrder: (order: any) => v
         setDate(currentDate);
     }, []);
 
-    function clearForm() {
+    useEffect(() => {
+        dispatch(viewCustomers());
+        dispatch(viewFlowers());
+    }, [dispatch]);
 
-    }
+    // **Auto-generate the next Order ID**
+    useEffect(() => {
+        // Generate the next order id based on the number of orders in the store
+        setOrderId((orders.length + 1).toString());
+    }, [orders]);
 
-    const handleAddOrder = () => {
-        if (!orderId || !customerName || !customerPhone || !name || !address || !email || !itemName || !qty) {
-            alert("Please fill all fields!");
+    const handleCustomerSelect = (selectedEmail: string) => {
+        console.log("Selected Email:", selectedEmail);
+        setEmail(selectedEmail);
+
+        // Clear related fields
+        setCustomerName("");
+        setCustomerPhone("");
+        setAddress("");
+
+        if (selectedEmail === "") {
+            console.log("No customer selected, fields cleared.");
+            return; // If no customer is selected, just clear the fields
+        }
+
+        console.log("Searching for customer...");
+        const selectedCustomer = customers.find(
+            (customer) => customer.customer_email === selectedEmail
+        );
+
+        console.log("Selected Customer:", selectedCustomer);
+
+        if (selectedCustomer) {
+            setCustomerName(selectedCustomer.customer_firstName);
+            setCustomerPhone(selectedCustomer.customer_phone);
+            setAddress(selectedCustomer.customer_address);
+        } else {
+            console.log("No matching customer found for email:", selectedEmail);
+        }
+    };
+
+    const handleItemSelect = (selectedOption: string) => {
+        setItemName(selectedOption);
+        setQtyOnHand(undefined);
+        setUnitPrice(undefined);
+        setItemCode(undefined);
+
+        if (selectedOption === "") {
             return;
         }
 
-        const newOrder = {
-            orderId,
-            date,
-            customerName,
-            customerPhone,
-            name,
-            address,
-            email,
-            itemName,
-            qtyOnHand,
-            qty,
-            orderTotal,
-        };
+        const [selectedName, selectedColor] = selectedOption.split(" - ");
+        const selectedFlower = flowers.find(
+            (flower) =>
+                flower.flower_name === selectedName &&
+                flower.flower_colour === selectedColor
+        );
 
-        onAddOrder(newOrder);
-        clearForm();
+        if (selectedFlower) {
+            const flowerInCart = cartItems.find(
+                (item) => item.flowerCode === selectedFlower.flower_code
+            );
+            const remainingQtyOnHand =
+                selectedFlower.flower_qty_on_hand -
+                (flowerInCart ? flowerInCart.quantity : 0);
+
+            setQtyOnHand(remainingQtyOnHand);
+            setUnitPrice(selectedFlower.flower_unit_price);
+            setItemCode(selectedFlower.flower_code);
+        }
     };
 
+    /* const getFilteredFlowerOptions = () => {
+         // Filter to remove duplicates based on name and color
+         const uniqueFlowers = flowers.filter(
+             (flower, index, self) =>
+                 index ===
+                 self.findIndex(
+                     (f) =>
+                         f.flower_name === flower.flower_name &&
+                         f.flower_colour === flower.flower_colour
+                 )
+         );
+         return uniqueFlowers;
+     };*/
+
+    const getFilteredFlowerOptions = () => {
+        return flowers; // No filtering, return all flowers
+    };
+
+
+    const handleAddItemToCart = () => {
+        if (!orderId || !email || !itemName || !qty || !unitPrice) {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        if (qtyOnHand !== undefined && qty > qtyOnHand) {
+            toast.error("Quantity exceeds available stock!", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        const totalAmount = unitPrice * qty;
+        setTotalAmount(totalAmount);
+
+        const newItem = new CartItems(
+            itemCode!,
+            itemName,
+            unitPrice,
+            qty,
+            totalAmount
+        );
+
+        onAddItem(newItem);
+        setQtyOnHand(qtyOnHand! - qty!); // Update displayed qty on hand without affecting the database
+    };
+    const handlePlaceOrder = () => {
+        if (cartItems.length === 0) {
+            toast.error("No added items yet!", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        if (!paidAmount || !discount) {
+            toast.error("Please fill out all required fields.", {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
+            return;
+        }
+
+        // Convert discount to a number
+        const discountNumber = parseFloat(discount);
+
+        const orderDetails: OrderDetails[] = cartItems.map(item => ({
+            order_id: 0,
+            item: item.flowerCode.toString(),
+            quantity: item.quantity,
+            unitPrice: item.flowerUnitPrice,
+            total: item.total
+        }));
+
+        const newOrder: Order = {
+            order_id: 0,
+            customer_email: email,
+            order_date: date,
+            order_items: orderDetails,
+            wrapping_charges: wrappingCharges || 0,
+            decoration_charges: decorationCharges || 0,
+            sub_total: subtotal,
+            discount: discountNumber,
+            total_amount: totalAmount || 0,
+            paid_amount: paidAmount || 0,
+            balance: balance || 0,
+        }
+
+        dispatch(saveOrder(newOrder));
+
+        toast.success("Order placed successfully!", {
+            position: "bottom-right",
+            autoClose: 2020,
+        });
+
+        handleClearForm();
+        setCartItems([]);
+    }
+    useEffect(() => {
+        // Calculate the total amount whenever wrappingCharges, decorationCharges, or discount changes
+        if (discount && computedSubtotal) {
+            const discountValue = parseFloat(discount); // Convert to number
+            const discountAmount = computedSubtotal * (discountValue / 100); // Calculate discount
+            const finalTotal = computedSubtotal - discountAmount; // Subtract discount
+            setTotalAmount(finalTotal); // Set total amount
+        } else {
+            setTotalAmount(computedSubtotal); // If no discount, set total amount to computed subtotal
+        }
+    }, [wrappingCharges, decorationCharges, discount, computedSubtotal]);
+
+    useEffect(() => {
+        // Calculate balance only when both paidAmount and totalAmount are defined
+        if (paidAmount !== undefined && totalAmount !== undefined) {
+            if (paidAmount >= totalAmount) {
+                setBalance(paidAmount - totalAmount);
+            } else {
+                setBalance(undefined);
+            }
+        }
+    }, [paidAmount, totalAmount]);
+
     const handleClearForm = () => {
-        setOrderId("");
         setCustomerName("");
         setCustomerPhone("");
-        setName("");
         setAddress("");
         setEmail("");
         setItemName("");
         setQtyOnHand(undefined);
+        setUnitPrice(undefined);
         setQty(undefined);
-        setOrderTotal(0);
+        setWrappingCharges(undefined);
+        setDecorationCharges(undefined);
+        setPaidAmount(undefined);
+        setBalance(undefined);
+        setTotalAmount(undefined);
+        setDiscount("");
+        setTotalAmount(0);
     };
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-3">
+
             {/* Original Order Form */}
-            <div className="w-1/2 p-4 border rounded-lg shadow-md bg-white">
-                <h2 className="text-lg font-bold mb-4">Place Order</h2>
+            <div className="w-1/2 p-4 border-2 border-[#432e32] rounded-lg shadow-md bg-[#bda6a6] mb-2">
 
                 <form
-                    className="grid grid-cols-2 gap-2"
+                    className="grid grid-cols-2 gap-3"
                     onSubmit={(e) => e.preventDefault()}
                 >
                     {/* Order ID */}
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <input
                             type="text"
                             placeholder="Order ID"
                             value={orderId}
                             onChange={(e) => setOrderId(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
                         />
                     </div>
 
                     {/* Date */}
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <input
                             type="text"
                             placeholder="Date"
                             value={date}
                             readOnly
-                            className="w-full p-2 border rounded bg-gray-200 cursor-not-allowed"
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            required
                         />
                     </div>
 
-                    {/* Customer Name (Dropdown) */}
-                    <div className="mb-2">
+                    {/* Customer Email (Dropdown) */}
+                    <div className="mb-3">
                         <select
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            value={email}
+                            onChange={(e) => handleCustomerSelect(e.target.value)}
+                            className="w-full p-1 font-bold border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            required
                         >
                             <option value="">Select Customer</option>
-                            {customerNamesList.map((name, index) => (
-                                <option key={index} value={name}>
-                                    {name}
+                            {customers.map((customer) => (
+                                <option key={customer.customer_id} value={customer.customer_email}>
+                                    {customer.customer_email}
                                 </option>
                             ))}
                         </select>
-                    </div>
-
-                    {/* Customer Phone */}
-                    <div className="mb-2">
-                        <input
-                            type="text"
-                            placeholder="Customer Phone"
-                            value={customerPhone}
-                            onChange={(e) => setCustomerPhone(e.target.value)}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-
-                    {/* Name */}
-                    <div className="mb-2">
-                        <input
-                            type="text"
-                            placeholder="Contact"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-
-                    {/* Address */}
-                    <div className="mb-2">
-                        <input
-                            type="text"
-                            placeholder="Address"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
-
-                    {/* Email */}
-                    <div className="mb-2">
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-2 border rounded"
-                        />
                     </div>
 
                     {/* Item Name (Dropdown) */}
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <select
                             value={itemName}
-                            onChange={(e) => setItemName(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            onChange={(e) => handleItemSelect(e.target.value)}
+                            className="w-full p-1 font-bold border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            required
                         >
-                            <option value="">Select Item</option>
-                            {itemNamesList.map((item, index) => (
-                                <option key={index} value={item}>
-                                    {item}
+                            <option value="">Select Flower</option>
+                            {getFilteredFlowerOptions().map((flower) => (
+                                <option
+                                    key={`${flower.flower_code}-${flower.flower_colour}`}
+                                    value={`${flower.flower_name} - ${flower.flower_colour}`}
+                                >
+                                    {flower.flower_name} - {flower.flower_colour}
                                 </option>
                             ))}
                         </select>
                     </div>
 
+
+                    {/* Customer Name */}
+                    <div className="mb-3">
+                        <input
+                            type="text"
+                            placeholder="Customer Name"
+                            value={customerName}
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
+                        />
+                    </div>
+
                     {/* Quantity on Hand */}
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <input
                             type="number"
                             placeholder="Qty on Hand"
                             value={qtyOnHand || ""}
-                            onChange={(e) => setQtyOnHand(Number(e.target.value))}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
+                        />
+                    </div>
+
+                    {/* Address */}
+                    <div className="mb-3">
+                        <input
+                            type="text"
+                            placeholder="Address"
+                            value={address}
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
+                        />
+                    </div>
+
+                    {/* Unit Price */}
+                    <div className="mb-3">
+                        <input
+                            type="text"
+                            placeholder="Unit Price"
+                            value={unitPrice !== undefined ? `Rs: ${unitPrice.toFixed(2)}` : ""}
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
+                        />
+                    </div>
+
+                    {/* Contact */}
+                    <div className="mb-3">
+                        <input
+                            type="number"
+                            placeholder="Contact"
+                            value={customerPhone}
+                            className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            readOnly
                         />
                     </div>
 
                     {/* Quantity to Order */}
-                    <div className="mb-2">
+                    <div className="mb-3">
                         <input
                             type="number"
                             placeholder="Qty"
                             value={qty || ""}
                             onChange={(e) => setQty(Number(e.target.value))}
-                            className="w-full p-2 border rounded"
+                            className="w-full p-1 font-bold border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            required
                         />
                     </div>
 
                     {/* Button Section */}
                     <div className="col-span-2 flex gap-2 mb-2">
                         <button
-                            onClick={handleAddOrder}
-                            className="w-1/2 p-2 bg-blue-500 text-white font-bold rounded"
+                            type="button"
+                            onClick={handleAddItemToCart}
+                            className="w-full h-9 bg-yellow-600 text-black font-bold border-2 border-yellow-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            style={{
+                                fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
+                                letterSpacing: "0.5px", // Slight letter spacing for elegance
+                            }}
                         >
                             Add to Cart
                         </button>
 
                         <button
+                            type="button"
                             onClick={handleClearForm}
-                            className="w-1/2 p-2 bg-gray-500 text-white font-bold rounded"
+                            className="w-full h-9 bg-pink-900 text-white font-bold border-2 border-pink-900 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            style={{
+                                fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
+                                letterSpacing: "0.5px", // Slight letter spacing for elegance
+                            }}
                         >
                             Clear
                         </button>
@@ -212,77 +441,120 @@ const PlaceOrderFormComponent = ({ onAddOrder }: { onAddOrder: (order: any) => v
             </div>
 
             {/* New Place Order Form */}
-            <div className="w-1/2 p-4 border rounded-lg shadow-md bg-white">
-                <h2 className="text-lg font-bold mb-4">Place Order</h2>
+            <div className="w-1/2 p-4 border-2 border-[#432e32] rounded-lg shadow-md bg-[#bda6a6] mb-2">
 
                 {/* New Form Layout */}
                 <form className="grid grid-cols-2 gap-2">
-                    {/* Input 1 */}
+
+                    {/* Wrapping Chargers */}
                     <div className="mb-2">
-                        <label className="block">Wrapping chargers</label>
+                        <label className="block mb-2 text-md font-bold text-[#432e32]">Wrapping Chargers</label>
                         <input
-                            type="text"
-                            className="w-full p-2 border rounded"
+                            type="number"
+                            className="w-full p-1 border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Enter charge"
+                            value={wrappingCharges || ""}
+                            onChange={(e) => setWrappingCharges(Number(e.target.value))}
+                            required
                         />
                     </div>
 
-                    {/* Input 2 */}
+                    {/* Decoration Chargers */}
                     <div className="mb-2">
-                        <label className="block">Decoration Chargers</label>
+                        <label className="block mb-2 text-md font-bold text-[#432e32]">Decoration Chargers</label>
                         <input
-                            type="text"
-                            className="w-full p-2 border rounded"
+                            type="number"
+                            className="w-full p-1 border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Enter charge"
+                            value={decorationCharges || ""}
+                            onChange={(e) => setDecorationCharges(Number(e.target.value))}
+                            required
                         />
                     </div>
 
-                    {/* Input 3 */}
+                    {/* Sub Total */}
                     <div className="mb-2">
-                        <label className="block">Sub Total</label>
+                        <label className="block mb-2 text-md font-bold text-[#432e32]">Sub Total</label>
                         <input
                             type="text"
-                            className="w-full p-2 border rounded"
+                            value={`Rs: ${computedSubtotal.toFixed(2)}`}
+                            className="w-full p-1 font-bold border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Sub Total"
+                            readOnly
                         />
                     </div>
 
-                    {/* Input 4 */}
+
+                    {/* Paid Amount */}
                     <div className="mb-2">
-                        <label className="block">Paid Amount</label>
+                        <label className="block mb-2 text-md font-bold text-[#432e32]">Paid Amount</label>
                         <input
                             type="text"
-                            className="w-full p-2 border rounded"
+                            className="w-full p-1 border border-[#432e32] rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Enter cash"
+                            value={paidAmount || ""}
+                            onChange={(e) => setPaidAmount(Number(e.target.value))}
+                            required
                         />
                     </div>
 
-                    {/* Input 5 */}
+                    {/* Discount */}
+                    <div>
+                        <label htmlFor="discount" className="block mb-2 text-md font-bold text-[#432e32]">
+                            Discount
+                        </label>
+                        <div className="relative">
+                            <input
+                                type="number"
+                                id="discount"
+                                className="w-full p-1 pr-8 border border-[#432e32] text-md rounded bg-amber-50 focus:outline-none shadow-md shadow-[#7e6868] appearance-none"
+                                value={discount}
+                                onChange={(e) => {
+                                    let value = e.target.value;
+                                    // Ensure the value is within 0 - 100 range
+                                    if (value !== "" && (parseFloat(value) < 0 || parseFloat(value) > 100)) {
+                                        return;
+                                    }
+                                    setDiscount(value);
+                                }}
+                                min="0"
+                                max="100"
+                                required
+                            />
+                            <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-md text-gray-700">%</span>
+                        </div>
+                    </div>
+
+
+
+                    {/* Balance */}
                     <div className="mb-2">
-                        <label className="block">Discount</label>
+                        <label className="block mb-2 text-md font-bold text-[#432e32]">Balance</label>
                         <input
                             type="text"
-                            placeholder="Enter Quantity"
-                            className="w-full p-2 border rounded"
+                            className="w-full p-1 font-bold border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Balance"
+                            value={balance !== undefined ? `Rs: ${balance.toFixed(2)}` : ""}
+                            readOnly
                         />
                     </div>
 
-                    {/* Input 6 */}
-                    <div className="mb-2">
-                        <label className="block">Balance</label>
-                        <input
-                            type="text"
-                            placeholder="Enter Quantity"
-                            className="w-full p-2 border rounded"
-                        />
-                    </div>
+                    <label className="block mt-1.5 text-md font-bold text-[#432e32]">Total Amount</label>
 
                     {/* Place Order Buttons */}
-                    <div className="col-span-2 mb-2 flex gap-2">
-                        {/* Input 6 */}
-                            <input
-                                type="text"
-                                placeholder="Total Amount"
-                                className="w-full p-2 border rounded"
-                            />
+                    <div className="col-span-2 flex gap-2">
+                        {/* Total amount */}
+                        <input
+                            type="text"
+                            className="w-full p-1 font-extrabold text-blue-800 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
+                            placeholder="Total Amount"
+                            value={totalAmount ? `Rs: ${totalAmount.toFixed(2)}` : ""}
+                            readOnly
+                        />
                         <button
-                            className="w-1/2 p-2 bg-green-500 text-white font-bold rounded"
+                            type="button"
+                            className="w-full h-9 bg-[#7fd6a6] text-black font-bold border-2 border-[#7fd6a6] rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            onClick={handlePlaceOrder}
                         >
                             Place Order
                         </button>
@@ -293,5 +565,5 @@ const PlaceOrderFormComponent = ({ onAddOrder }: { onAddOrder: (order: any) => v
         </div>
     );
 };
-
 export default PlaceOrderFormComponent;
+
