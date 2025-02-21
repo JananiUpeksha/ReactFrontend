@@ -59,8 +59,8 @@ npm start
 ## 🌍 Deployment
 Easily deploy with **Vercel (Frontend)** and **Render/Heroku (Backend)**! 🚀
 
-- **Frontend Live URL:** [Frontend Link]([https://your-frontend-url.com](https://github.com/JananiUpeksha/ReactFrontend))
-- **Backend API URL:** [Backend Link]([https://your-backend-url.com](https://github.com/JananiUpeksha/NodeBackend))
+- **Frontend Live URL:** [Frontend Repository](https://github.com/JananiUpeksha/ReactFrontend)
+- **Backend API URL:** [Backend Repository](https://github.com/JananiUpeksha/NodeBackend)
 
 ---
 
