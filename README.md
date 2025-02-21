@@ -1,50 +1,67 @@
-# React + TypeScript + Vite
+# 🌸 Blissful Elegance - Flower Management System 🌸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to **Blissful Elegance** – a full-stack flower management system where admins can manage flowers, customers, and drivers while handling orders and deliveries seamlessly! 🚀💐
 
-Currently, two official plugins are available:
+## ✨ Features
+✅ **Admin Dashboard** - Manage flowers, customers, and drivers efficiently.  
+✅ **Order Management** - Place, update, and track flower orders.  
+✅ **Secure Authentication** - JWT-based login and role-based access control. 🔐  
+✅ **State Management** - Using Redux Toolkit for seamless data flow.  
+✅ **Responsive UI** - Beautiful and user-friendly interface with Tailwind CSS. 🎨  
+✅ **Database Integration** - MySQL for structured and efficient data storage.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tech Stack
+### Frontend (React + Redux)
+- **React.js** ⚛️ - Component-based UI
+- **Redux Toolkit** 🎛️ - State management
+- **React Router** 🚏 - Navigation
+- **Tailwind CSS** 🎨 - Styling
 
-## Expanding the ESLint configuration
+### Backend (Node.js + Express)
+- **Node.js** 🟢 - Backend runtime
+- **Express.js** 🚀 - REST API framework
+- **MySQL** 🗄️ - Database
+- **JWT Authentication** 🔐 - Secure login
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Getting Started
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/yourusername/blissful-elegance.git
+cd blissful-elegance
+```
+### 2️⃣ Install Dependencies
+#### Frontend
+```bash
+cd frontend
+npm install
+npm start
+```
+#### Backend
+```bash
+cd backend
+npm install
+npm start
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 🌐 API Endpoints
+### 🔹 Authentication
+- **POST** `/api/auth/register` - Register a new user
+- **POST** `/api/auth/login` - User login
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 🔹 Flowers
+- **GET** `/api/flowers` - Get all flowers
+- **POST** `/api/flowers` - Add a new flower
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### 🔹 Orders
+- **GET** `/api/orders` - Get all orders
+- **POST** `/api/orders` - Place a new order
+
+## 🌍 Deployment
+Easily deploy with **Vercel (Frontend)** and **Render/Heroku (Backend)**! 🚀
+
+- **Frontend Live URL:** [Frontend Link]([https://your-frontend-url.com](https://github.com/JananiUpeksha/ReactFrontend))
+- **Backend API URL:** [Backend Link]([https://your-backend-url.com](https://github.com/JananiUpeksha/NodeBackend))
+
+---
+
+
