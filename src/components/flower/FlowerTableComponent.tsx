@@ -58,7 +58,7 @@ const FlowerTableComponent = ({onEditFlower,}: { onEditFlower: (flower: Flower) 
             {/* Table */}
             <div className="mt-7 overflow-y-auto max-h-[580px] border-2 border-black shadow-lg sm:rounded-lg">
                 <table
-                    className="w-full bg-[#bda6a6] border-collapse">
+                    className="w-full bg-[#98D8EF] border-collapse">
                     <thead className="sticky top-0 bg-gray-100 text-gray-600 text-xs uppercase tracking-wider z-10">
                     <tr className="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
                         <th className="px-6 py-3 text-left font-bold">Code</th>

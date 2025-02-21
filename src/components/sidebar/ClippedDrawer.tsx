@@ -16,7 +16,6 @@ import GroupIcon from '@mui/icons-material/Group';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import PaymentIcon from '@mui/icons-material/Payment';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import DashboardPage from '../../pages/DashboardPage.tsx';
@@ -45,15 +44,18 @@ export default function HoverableSidebar() {
         // Perform any logout logic here (e.g., clear tokens, session, etc.)
         console.log("User logged out");
 
-        // Navigate to the login page
-        navigate("/login");
+        // Navigate to the root and then to the login page
+        navigate("/");
+        setTimeout(() => {
+            navigate("/login");
+        }, 0);
     };
 
     return (
         <Box sx={{
             display: 'flex',
             minHeight: '100vh',
-            backgroundImage: 'url(/background.jpg)', // Set your background image path
+            backgroundImage: 'url(/b3.jpg)', // Set your background image path
             backgroundSize: 'cover', // Ensure the image covers the entire background
             backgroundPosition: 'center', // Center the image
             backgroundRepeat: 'no-repeat', // Prevent repeating the image
@@ -69,8 +71,8 @@ export default function HoverableSidebar() {
                     [`& .MuiDrawer-paper`]: {
                         width: drawerWidth,
                         boxSizing: 'border-box',
-                        color: 'black',
-                        backgroundColor: '#bda6a6',
+                        color: 'white', // Change text color to white
+                        backgroundColor: '#578FCA', // Blue color for the sidebar
                         opacity: 0.9,
                         boxShadow: '0px 4px 10px rgba(0,0,0,0.2)',
                         borderRadius: '16px',
@@ -89,77 +91,69 @@ export default function HoverableSidebar() {
                     <Typography
                         variant="h6"
                         sx={{
-                            color: '#432e32', // Custom color
+                            color: '#fff', // Change to white
                             fontFamily: 'Fira Code, monospace',
-                            fontSize: '26px', // Custom font size
-                            fontWeight: 'bold', // Custom font weight
-                            marginBottom: '0',
+                            fontSize: '26px',
+                            fontWeight: 'bold',
+                            marginBottom: '30px', // Increased gap between name and sidebar components
                         }}
                     >
-                        Floral Dreams
+                        Blissful Elegance
                     </Typography>
-
-                    <img
-                        src="/logo.png"
-                        alt="Green Shadow Logo"
-                        style={{ width: '150px', height: 'auto', marginTop: '0', marginLeft: '40px' }} // Adjust size and spacing
-                    />
 
                     <List>
                         {[
-                            { text: 'Dashboard', icon: <DashboardIcon />, to: '/' }, // DashboardPage Icon
-                            { text: 'Flowers', icon: <LocalFloristIcon />, to: '/flower' }, // Flower Icon
-                            { text: 'Customers', icon: <GroupIcon />, to: '/customer' }, // Group Icon (Customer Management)
-                            { text: 'Place Order', icon: <ShoppingCartIcon />, to: '/placeOrder' }, // Shopping Cart Icon for Orders
-                            { text: 'Order Details', icon: <ReceiptLongIcon />, to: '/orderDetails' }, // Receipt Icon for Order Details
-                            { text: 'Payment', icon: <PaymentIcon />, to: '/payment' }, // Payment Icon for Transactions
-                            { text: 'Log Out', icon: <ExitToAppIcon />, to: '/login' }, // Log Out Icon
+                            { text: 'Dashboard', icon: <DashboardIcon />, to: '/' },
+                            { text: 'Flowers', icon: <LocalFloristIcon />, to: '/flower' },
+                            { text: 'Customers', icon: <GroupIcon />, to: '/customer' },
+                            { text: 'Place Order', icon: <ShoppingCartIcon />, to: '/placeOrder' },
+                            { text: 'Order Details', icon: <ReceiptLongIcon />, to: '/orderDetails' },
+                            { text: 'Log Out', icon: <ExitToAppIcon />, to: '/login' },
                         ].map((item) => (
                             <Tooltip title={item.text} placement="right" key={item.text}>
                                 <ListItem
                                     disablePadding
                                     sx={{
-                                        marginBottom: '5px', // Add vertical margin between list items
-                                        border: '2px solid #674b50', // Add border
-                                        // borderRadius: '8px', // Round the corners
+                                        marginBottom: '5px',
+                                        border: '2px solid #0d47a1', // Darker blue for border
                                     }}
                                 >
                                     <ListItemButton
                                         component={Link}
                                         to={item.to}
-                                        onClick={item.text === 'Log Out' ? handleLogout : undefined} // Add onClick handler for logout
+                                        onClick={item.text === 'Log Out' ? handleLogout : undefined}
                                         sx={{
                                             '&:hover': {
-                                                backgroundColor: 'rgba(117,90,95,0.83)',
+                                                backgroundColor: 'rgba(25, 118, 210, 0.8)', // Lighter blue on hover
                                                 transition: '0.3s',
                                                 '& .MuiListItemText-primary': {
-                                                    color: '#ecd9d9', // Change the text color
+                                                    color: '#fff', // Change text color on hover
                                                 },
                                                 '& .MuiListItemIcon-root': {
-                                                    color: '#ecd9d9', // Change the icon color
+                                                    color: '#fff', // Change icon color on hover
                                                 },
                                             },
                                             ...(location.pathname === item.to && {
-                                                backgroundColor: 'rgba(117,90,95,0.83)',
+                                                backgroundColor: 'rgba(25, 118, 210, 0.8)',
                                                 fontWeight: 'bold',
                                                 '& .MuiListItemText-primary': {
-                                                    color: '#ecd9d9',
+                                                    color: '#fff',
                                                 },
                                                 '& .MuiListItemIcon-root': {
-                                                    color: '#ecd9d9',
+                                                    color: '#fff',
                                                 },
                                             }),
                                         }}
                                     >
-                                        <ListItemIcon sx={{ color: '#432e32' }}>{item.icon}</ListItemIcon>
+                                        <ListItemIcon sx={{ color: '#fff' }}>{item.icon}</ListItemIcon>
                                         <ListItemText
                                             primary={item.text}
                                             primaryTypographyProps={{
                                                 sx: {
-                                                    color: '#432e32', // Custom text color
-                                                    fontFamily: 'Montserrat, sans-serif', // Sleek and geometric
-                                                    fontSize: '16px', // Custom font size
-                                                    fontWeight: 'bold', // Custom font weight
+                                                    color: '#fff', // Change text color to white
+                                                    fontFamily: 'Montserrat, sans-serif',
+                                                    fontSize: '16px',
+                                                    fontWeight: 'bold',
                                                 },
                                             }}
                                         />
@@ -171,21 +165,19 @@ export default function HoverableSidebar() {
                 </Box>
             </Drawer>
 
-            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#bda6a6', opacity: 0.9, borderRadius: '16px', marginLeft: '20px' }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#e3f2fd', borderRadius: '16px', marginLeft: '20px' }}>
 
                 <Box
-                    sx={{ padding: '16px', backgroundColor: '#674b50', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    sx={{ padding: '16px', backgroundColor: '#578FCA', borderRadius: '8px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
-                    <Typography variant="h6" sx={{ color: '#ecd9d9', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
-                        {currentTime.toLocaleDateString()}  -  {currentTime.toLocaleTimeString()}
+                    <Typography variant="h6" sx={{ color: '#fff', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif' }}>
+                        {currentTime.toLocaleDateString()} - {currentTime.toLocaleTimeString()}
                     </Typography>
-
 
                     <Typography
                         variant="h5"
-                        sx={{ color: '#ecd9d9', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif', textAlign: 'right' }}
+                        sx={{ color: '#fff', fontWeight: 'bold', fontFamily: 'Roboto, sans-serif', textAlign: 'right' }}
                     >
-
                         {(() => {
                             switch (location.pathname) {
                                 case '/':
@@ -198,10 +190,6 @@ export default function HoverableSidebar() {
                                     return 'Orders Management';
                                 case '/orderDetails':
                                     return 'Order Details';
-                                case '/payment':
-                                    return 'Payments';
-                                case '/logout':
-                                    return 'Logout';
                                 default:
                                     return '';
                             }
@@ -209,21 +197,17 @@ export default function HoverableSidebar() {
                     </Typography>
                 </Box>
 
-
-                <Box sx={{ padding: '16px', backgroundColor: '#674b50', borderRadius: '8px', height: '87%' }}>
+                <Box sx={{ padding: '16px', backgroundColor: '#578FCA', borderRadius: '8px', height: '87%' }}>
                     <Routes>
                         <Route path="/" element={<DashboardPage />} />
                         <Route path="/flower" element={<FlowerPage />} />
                         <Route path="/customer" element={<CustomerPage />} />
                         <Route path="/placeOrder" element={<PlaceOrderPage />} />
                         <Route path="/orderDetails" element={<OrderDetailPage />} />
-                        <Route path="/payment" element={<FlowerPage />} />
                     </Routes>
                 </Box>
 
             </Box>
-
-
         </Box>
     );
 }

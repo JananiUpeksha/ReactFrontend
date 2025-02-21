@@ -260,11 +260,12 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
     return (
         <>
             <form
-                className="mx-auto mt-0 p-3 rounded-lg border-2 border-[#432e32] shadow-lg bg-[#bda6a6]"
+                className="mx-auto mt-0 p-3 rounded-lg border-2 border-[#98D8EF] shadow-lg bg-[#98D8EF]"
                 style={{
                     width: "100%",
                     maxWidth: "600px",
                 }}
+
             >
                 <div className="grid gap-6 mb-6 md:grid-cols-2">
                     {/*<div>
@@ -299,10 +300,15 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                             <button
                                 type="button"
                                 onClick={handleSearchButtonClick}
-                                className="py-2 px-4 text-sm font-medium text-white bg-[#007bff] rounded-md shadow-md mt-0.5"
+                                className="w-full h-9 py-2 px-4 text-sm font-bold text-white bg-[#007bff] border-2 border-[#007bff] rounded-lg shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                                style={{
+                                    fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
+                                    letterSpacing: "0.5px", // Slight letter spacing for elegance
+                                }}
                             >
                                 Search
                             </button>
+
                         </div>
                     </div>
 
@@ -403,18 +409,28 @@ const FlowerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () => 
                 <div className="flex justify-between mt-6">
                     <button
                         type="button"
-                        className="w-[45%] py-2 px-3 text-sm font-medium text-white bg-[#007bff] rounded-md"
+                        className="w-[45%] py-2 px-3 text-sm font-bold text-black bg-yellow-600 border-2 border-yellow-600 rounded-lg shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
                         onClick={() => handleFlowerOperation(editMode ? "UPDATE_FLOWER" : "ADD_FLOWER")}
+                        style={{
+                            fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
+                            letterSpacing: "0.5px", // Slight letter spacing for elegance
+                        }}
                     >
                         {editMode ? "Update Flower" : "Add Flower"}
                     </button>
+
                     <button
                         type="button"
-                        className="w-[45%] py-2 px-3 text-sm font-medium text-white bg-[#dc3545] rounded-md"
+                        className="w-[45%] py-2 px-3 text-sm font-bold text-white bg-red-600 border-2 border-red-600 rounded-lg shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
                         onClick={clearForm}
+                        style={{
+                            fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
+                            letterSpacing: "0.5px", // Slight letter spacing for elegance
+                        }}
                     >
                         Clear
                     </button>
+
                 </div>
             </form>
         </>

@@ -79,7 +79,7 @@ const PlaceOrderTableComponent = ({ cartItems, onDelete }: { cartItems: CartItem
         <div className="mt-7 overflow-y-auto max-h-[200px] border-2 border-black shadow-lg sm:rounded-lg">
 
             <table
-                className="w-full bg-[#bda6a6] border-collapse">
+                className="w-full bg-[#98D8EF] border-collapse">
                 <thead className="sticky top-0 bg-gray-100 text-gray-600 text-xs uppercase tracking-wider z-10">
                 <tr className="bg-gray-100 text-gray-600 text-xs uppercase tracking-wider">
                     <th className="border border-gray-300 p-2">Item Name</th>

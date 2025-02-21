@@ -276,7 +276,7 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
         <div className="flex gap-3">
 
             {/* Original Order Form */}
-            <div className="w-1/2 p-4 border-2 border-[#432e32] rounded-lg shadow-md bg-[#bda6a6] mb-2">
+            <div className="w-1/2 p-4 border-2 border-[#98D8EF] rounded-lg shadow-md bg-[#98D8EF] mb-2">
 
                 <form
                     className="grid grid-cols-2 gap-3"
@@ -286,7 +286,7 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
                     <div className="mb-3">
                         <input
                             type="text"
-                            placeholder="Order ID"
+                            placeholder="ID"
                             value={orderId}
                             onChange={(e) => setOrderId(e.target.value)}
                             className="w-full p-1 border border-[#432e32] rounded bg-gray-100 focus:outline-none shadow-md shadow-[#7e6868]"
@@ -416,7 +416,7 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
                         <button
                             type="button"
                             onClick={handleAddItemToCart}
-                            className="w-full h-9 bg-yellow-600 text-black font-bold border-2 border-yellow-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            className="w-full h-9 bg-yellow-500 text-black font-bold border-2 border-yellow-500 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-yellow-600 hover:text-black hover:border-yellow-600"
                             style={{
                                 fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
                                 letterSpacing: "0.5px", // Slight letter spacing for elegance
@@ -425,10 +425,11 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
                             Add to Cart
                         </button>
 
+
                         <button
                             type="button"
                             onClick={handleClearForm}
-                            className="w-full h-9 bg-pink-900 text-white font-bold border-2 border-pink-900 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            className="w-full h-9 bg-red-600 text-white font-bold border-2 border-red-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
                             style={{
                                 fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
                                 letterSpacing: "0.5px", // Slight letter spacing for elegance
@@ -436,12 +437,13 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
                         >
                             Clear
                         </button>
+
                     </div>
                 </form>
             </div>
 
             {/* New Place Order Form */}
-            <div className="w-1/2 p-4 border-2 border-[#432e32] rounded-lg shadow-md bg-[#bda6a6] mb-2">
+            <div className="w-1/2 p-4 border-2 border-[#98D8EF] rounded-lg shadow-md bg-[#98D8EF] mb-2">
 
                 {/* New Form Layout */}
                 <form className="grid grid-cols-2 gap-2">
@@ -553,11 +555,13 @@ const PlaceOrderFormComponent = ({onAddItem, subtotal, cartItems, setCartItems,}
                         />
                         <button
                             type="button"
-                            className="w-full h-9 bg-[#7fd6a6] text-black font-bold border-2 border-[#7fd6a6] rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                            className="w-full h-9 bg-blue-600 text-white font-bold border-2 border-blue-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
                             onClick={handlePlaceOrder}
                         >
                             Place Order
                         </button>
+
+
                     </div>
                 </form>
 

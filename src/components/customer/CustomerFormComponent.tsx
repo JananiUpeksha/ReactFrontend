@@ -782,7 +782,7 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
     return (
         <>
             <form
-                className="mx-auto mt-0 p-3 rounded-lg border-2 border-[#432e32] shadow-lg bg-[#bda6a6]"
+                className="mx-auto mt-0 p-3 rounded-lg border-2 border-[#98D8EF] shadow-lg bg-[#98D8EF]"
                 style={{
                     width: "100%", // Adjust form width
                     maxWidth: "600px", // Set a maximum width for responsiveness
@@ -828,6 +828,7 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                             >
                                 Search
                             </button>
+
                         </div>
                     </div>
 
@@ -932,10 +933,11 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                     >
                         {editMode ? "Update Customer" : "Add Customer"}
                     </button>
+
                     <button
                         type="button"
                         onClick={() => clearForm()}
-                        className="w-full h-9 bg-pink-900 text-white font-bold border-2 border-pink-900 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
+                        className="w-full h-9 bg-red-600 text-white font-bold border-2 border-red-600 rounded-lg text-center shadow-lg shadow-[#7e6868] hover:bg-transparent hover:text-black hover:border-black"
                         style={{
                             fontFamily: "'Nunito Sans', sans-serif", // Clean and modern font
                             letterSpacing: "0.5px", // Slight letter spacing for elegance
@@ -943,6 +945,7 @@ const CustomerFormComponent = forwardRef(({ onCloseModal }: { onCloseModal: () =
                     >
                         Clear
                     </button>
+
                 </div>
             </form>
         </>
