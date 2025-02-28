@@ -2,21 +2,25 @@ import { useEffect, useState } from "react";
 
 const DashboardImageSlider = () => {
     const flowerImages = [
-        "/flower1.jpg", // Replace with the actual image path
-        "/flower2.jpg", // Replace with the actual image path
-        "/flower3.jpg", // Replace with the actual image path
-        "/flower4.jpg",
-        "/flower5.jpg",
+        "/i1.jpg",
+        "/i2.jpg",
+        "/i3.jpg",
+        "/i4.jpg",
+        "/i5.jpg",
+        "/i6.jpg",
+        "/i7.jpg",
+        "/i8.jpg",
+        "/i9.jpg",
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % flowerImages.length); // Cycle through images
-        }, 2000); // Change image every 2 seconds
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % flowerImages.length);
+        }, 2000);
 
-        return () => clearInterval(interval); // Clear interval on unmount
+        return () => clearInterval(interval);
     }, [flowerImages.length]);
 
     return (
@@ -25,7 +29,7 @@ const DashboardImageSlider = () => {
             <img
                 src={flowerImages[currentIndex]}
                 alt={`Flower ${currentIndex + 1}`}
-                className="w-full h-[370px] object-cover transition-opacity duration-1000 ease-in-out"
+                className="w-[900px] h-[400px] object-cover transition-opacity duration-1000 ease-in-out" //Fixed height here
             />
 
             {/* Navigation Dots */}

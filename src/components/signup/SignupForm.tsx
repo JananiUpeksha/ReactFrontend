@@ -38,7 +38,6 @@ function SignUpFormComponent() {
         }
     }, [isAuthenticated, navigate]);
 
-
     const handleSignUp = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -56,7 +55,7 @@ function SignUpFormComponent() {
             <div
                 className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: "url('/flower6.jpg')",
+                    backgroundImage: "url('/signup.jpg')",
                     filter: "blur(3px)", // Apply the blur effect only to the background
                     zIndex: -1 // Ensure the background is behind the content
                 }}
@@ -65,56 +64,55 @@ function SignUpFormComponent() {
                 className="bg-black bg-opacity-40 backdrop-blur-lg shadow-2xl shadow-black rounded-3xl flex overflow-hidden w-full max-w-4xl h-[600px]">
                 {/* Left Side - Form */}
                 <div className="w-1/2 p-10 flex flex-col justify-center">
-                    <h1 className="text-3xl font-extrabold text-red-300 text-center mb-6" style={{ fontFamily: 'Cinzel, serif' }}>FLORAL DREAMS</h1>
+                    <h1 className="text-3xl font-extrabold text-blue-300 text-center mb-6" style={{ fontFamily: 'Cinzel, serif' }}>FLORAL DREAMS</h1>
                     <h2 className="text-2xl font-bold text-black text-center mb-6" style={{ fontFamily: 'Merriweather, serif' }}>Create Account!</h2>
                     <form className="space-y-6" onSubmit={handleSignUp}>
-
                         {/* First Name & Last Name - Side by Side */}
                         <div className="flex gap-4">
                             <div className="w-1/2">
-                                <label className="block text-md font-medium text-red-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>First Name</label>
+                                <label className="block text-md font-medium text-blue-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>First Name</label>
                                 <input
                                     type="text"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
                                     required
-                                    className="w-full p-1 rounded focus:outline-none focus:bg-red-200 shadow-lg bg-red-200"
+                                    className="w-full p-1 rounded focus:outline-none focus:bg-blue-200 shadow-lg bg-blue-200"
                                 />
                             </div>
                             <div className="w-1/2">
-                                <label className="block text-md font-medium text-red-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Last Name</label>
+                                <label className="block text-md font-medium text-blue-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Last Name</label>
                                 <input
                                     type="text"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
                                     required
-                                    className="w-full p-1 rounded focus:outline-none focus:bg-red-200 shadow-lg bg-red-200"
+                                    className="w-full p-1 rounded focus:outline-none focus:bg-blue-200 shadow-lg bg-blue-200"
                                 />
                             </div>
                         </div>
                         <div>
-                            <label className="block text-md font-medium text-red-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Username</label>
+                            <label className="block text-md font-medium text-blue-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Username</label>
                             <input
                                 type="email"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 required
-                                className="w-full p-1 rounded focus:outline-none focus:bg-red-200 shadow-lg bg-red-200"
+                                className="w-full p-1 rounded focus:outline-none focus:bg-blue-200 shadow-lg bg-blue-200"
                             />
                         </div>
                         <div>
-                            <label className="block text-md font-medium text-red-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Password</label>
+                            <label className="block text-md font-medium text-blue-200 mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>Password</label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="w-full p-1 rounded focus:outline-none focus:bg-red-200 shadow-lg bg-red-200 mb-6"
+                                className="w-full p-1 rounded focus:outline-none focus:bg-blue-200 shadow-lg bg-blue-200 mb-6"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-full bg-red-300 text-lg font-extrabold text-black py-1 rounded-md hover:bg-black hover:text-pink-200 transition shadow-lg shadow-red-950"
+                            className="w-full bg-blue-300 text-lg font-extrabold text-black py-1 rounded-md hover:bg-black hover:text-blue-200 transition shadow-lg shadow-blue-950"
                             style={{ fontFamily: 'Poppins, sans-serif' }}
                         >
                             Sign Up
@@ -123,7 +121,7 @@ function SignUpFormComponent() {
                            style={{ fontFamily: 'Montserrat, sans-serif' }}
                         >
                             Already have an account?
-                            <span className="ml-2 text-red-300 cursor-pointer hover:underline"
+                            <span className="ml-2 text-blue-300 cursor-pointer hover:underline"
                                   onClick={() => {
                                       dispatch(clearError());
                                       navigate("/login");
@@ -132,8 +130,8 @@ function SignUpFormComponent() {
                     </form>
                 </div>
                 {/* Right Side - Image */}
-                <div className="w-1/2 hidden lg:flex items-center justify-center bg-pink-300 opacity-90">
-                    <img src="/flower6.jpg" alt="Flower shop" className="w-full h-full object-cover"/>
+                <div className="w-1/2 hidden lg:flex items-center justify-center bg-blue-300 opacity-90">
+                    <img src="/signup.jpg" alt="Flower shop" className="w-full h-full object-cover"/>
                 </div>
             </div>
         </div>

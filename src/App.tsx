@@ -64,7 +64,7 @@ function App() {
             <Routes>
                 <Route path="/login" element={<LoginFormComponent />} />
                 <Route path="/signup" element={<SignUpFormComponent />} />
-                <Route
+                {/*<Route
                     path="/"
                     element={
                         isAuthenticated ? (
@@ -74,6 +74,17 @@ function App() {
                         )
                     }
                 />
+                <Route
+                    path="/*"
+                    element={
+                        isAuthenticated ? (
+                            <RootLayout />
+                        ) : (
+                            <Navigate to="/login" replace />
+                        )
+                    }
+                />
+            </Routes>*/}
                 <Route
                     path="/*"
                     element={
